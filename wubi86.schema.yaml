@@ -1,0 +1,127 @@
+# Rime schema settings
+# encoding: utf-8
+
+schema:
+  schema_id: wubi86
+  name: wubi86
+  version: "1.0"
+  author:
+    - 创始人 王永民先生
+  description: |
+    五笔字形 86 极点极爽版
+  dependencies:
+    - pinyin
+
+switches:
+  - name: ascii_mode
+    reset: 0
+    states: [ 中文, 西文 ]
+  - name: full_shape
+    states: [ 半角, 全角 ]
+  - name: extended_charset
+    states: [ 常用, 扩展 ]
+  - name: ascii_punct
+    states: [ 。，, ．， ]
+
+engine:
+  processors:
+    - ascii_composer
+    - recognizer
+    - key_binder
+    - speller
+    - punctuator
+    - selector
+    - navigator
+    - express_editor
+  segmentors:
+    - ascii_segmentor
+    - matcher
+    - "affix_segmentor@jzzc"
+    - abc_segmentor
+    - punct_segmentor
+    - fallback_segmentor
+
+  translators:
+    - punct_translator
+    - reverse_lookup_translator
+    - table_translator
+    - "table_translator@fixed"
+    - "table_translator@jzzc"
+  filters:
+    - uniquifier  
+    #过滤重复的候选字
+#    - lua_filter@single_char_first_filter # 单字优先方法
+
+speller:
+  auto_select: true                     
+  # false表示四码唯一时不自动上屏，true表示四码唯一时自动上屏
+  auto_clear: max_length                
+  # 空码时自动清空
+  delimiter: "`"                        
+  # 分隔符号
+  max_code_length: 4                    
+  # 四码上屏
+
+
+translator:
+  dictionary: wubi86
+  #翻译器将调取此字典文件
+  initial_quality: 100000
+  #设置此翻译器出字优先级
+  enable_charset_filter: false
+  #是否开启字符集过滤
+  enable_sentence: false
+  #自动造句
+  enable_encoder: false
+  #自动造词
+  encode_commit_history: false
+  #是否对已上屛词自动成词
+  max_phrase_length: 2
+  #最大自动成词词长
+  enable_completion: false
+  #提前显示尚未输入完整码的字
+  enable_user_dict: true
+  #是否开启用户词典
+  disable_user_dict_for_patterns:
+    - "^z.*$"
+  #禁止某些编码录入用户词典
+
+fixed:
+  __include: /translator
+  initial_quality: 1000
+  enable_encoder: true
+  enable_user_dict: true
+  
+jzzc:
+  __include: /translator
+  initial_quality: 1
+  enable_sentence: true
+  prefix: '`'
+  tips: "〔自造词请用`分隔〕"
+  tag: jzzc
+
+abc_segmentor:
+  extra_tags:
+    - reverse_lookup
+
+reverse_lookup:
+  dictionary: pinyin
+  prefix: ""
+  suffix: "'"
+  tips: "〔拼音反查〕"
+  preedit_format:
+    - xform/([nl])v/$1ü/
+    - xform/([nl])ue/$1üe/
+    - xform/([jqxy])v/$1u/
+
+punctuator:
+  import_preset: default
+
+key_binder:
+  import_preset: default
+
+recognizer:
+  import_preset: default
+  patterns:
+    reverse_lookup: "^z[a-z]*'?$"
+    jzzc: "^[a-y]*`[a-y`]*$"

@@ -1,0 +1,14 @@
+patch:
+  # 设置应用默认中英文模式
+  switches/@0/reset: 0                     
+  #默认输入是中文还是英文，1为英文，0为中文
+  style/font_face: "微软雅黑"              
+  #候选框字体
+  style/font_point: 17                     
+  #候选框字号
+  style/horizontal: false                  
+  #候选框是否横向显示
+  menu/page_size: 10                      
+  #候选词个数
+
+    
